@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import { useWishlist } from "@/context/whishlistcontext";
 import Layout from "@/components/layout";
 import Image from "next/image";
@@ -26,7 +25,7 @@ const WishlistPage = () => {
     .filter((product: Product) => wishlist.includes(product.id));
 
   return (
-    <Layout>
+    // <Layout>
       <div className="container mx-auto py-10">
         <h1 className="text-4xl font-bold text-center mb-10">My Wishlist</h1>
 
@@ -50,7 +49,7 @@ const WishlistPage = () => {
           </div>
         )}
       </div>
-    </Layout>
+    // </Layout>
   );
 };
 
