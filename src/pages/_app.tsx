@@ -1,18 +1,19 @@
-// pages/_app.tsx
-
-import { CartProvider } from  '../context/cartcontext'; // Ensure this path is correct
-import Layout from '../components/layout';
-import { AppProps } from 'next/app'; // Import AppProps type
 import '../styles/globals.css';
+import type { AppProps } from 'next/app';
+import { CartProvider } from '../context/cartcontext';
+import { WishlistProvider } from '../context/whishlistcontext';
+import Layout from '../components/layout';
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <CartProvider>  {/* Wrap CartProvider here */}
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+    <CartProvider>
+      <WishlistProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </WishlistProvider>
     </CartProvider>
   );
-}
+};
 
 export default MyApp;

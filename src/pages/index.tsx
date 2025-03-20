@@ -1,47 +1,40 @@
-import Link from 'next/link';
-import Image from 'next/image';
+"use client"
+ import Image from "next/image";
+import { useRouter } from "next/navigation";
+import React from "react";
+import Link from "next/link";
+import { Import } from "lucide-react";
 
-const products = [
-  { id: 1, name: 'Wireless Headphones', price: '199.99', imageUrl: '/headphones.jpg' },
-  { id: 2, name: 'Smartphone', price: '699.99', imageUrl: '/smartphone.jpg' },
-  { id: 3, name: 'Laptop', price: '999.99', imageUrl: '/laptop.jpg' },
-  { id: 4, name: 'Smart Watch', price: '149.99', imageUrl: '/smartwatch.jpg' },
-];
-
-const Home = () => {
-  
+export default function Home() {
+  const router=useRouter()
   return (
-    <div className="py-8 px-4">
-      <h1 className="text-4xl font-bold text-center mb-8">Welcome to Our E-Commerce Store</h1>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {products.map((product) => (
-          <div key={product.id} className="bg-white shadow-lg rounded-lg overflow-hidden">
-            <Image
-              src={product.imageUrl}
-              alt={product.name}
-              width={400}
-              height={250}
-              className="w-full h-56 object-cover"
-            />
-            <div className="p-4">
-              <h3 className="text-xl font-semibold text-gray-800">{product.name}</h3>
-              <p className="text-lg text-blue-600 mt-2">
-                ${parseFloat(product.price).toFixed(2)}
-              </p>
+    <main   className="flex flex-col items-center justify-center min-h-screen w-full bg-cover bg-center bg-no-repeat text-white p-12"
+    style={{
+      backgroundImage: "url('/background.jpg')", // Add your image in public folder
+    }}>
+    <div>
+      {/* Overlay for better readability */}
+      <div className="absolute inset-0  bg-opacity-8"></div>
 
-              {/* Link to Product Details */}
-              <Link href={`/product/${product.id}`} legacyBehavior>
-                <a className="w-full mt-4 py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">
-                  View Details
-                </a>
-              </Link>
-            </div>
-          </div>
-        ))}
+      {/* Content */}
+      <div className="relative text-center text-white px-6">
+        <h1 className="text-5xl md:text-6xl font-bold mb-4">
+          Welcome to <span className="text-violet-400">EcomStore</span>
+        </h1>
+        <p className="text-lg md:text-xl max-w-2xl mx-auto">
+          Discover the best deals on the latest products. Shop now and enjoy amazing discounts!
+        </p>
+
+        {/* CTA Button */}
+       
+        <button className="mt-6 bg-orange-500 text-white px-6 py-3 rounded-lg shadow-md text-lg font-semibold hover:bg-orange-600 transition"
+    onClick={()=>router.push('/product')}
+    >
+      shopping 
+    </button>
+    
       </div>
     </div>
+    </main>
   );
-};
-
-export default Home;
+}
