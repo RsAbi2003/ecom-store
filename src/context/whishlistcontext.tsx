@@ -1,75 +1,81 @@
 "use client";
-import { createContext, useContext, useState, useEffect } from "react";
-import { toast } from "sonner";  // ✅ Import toast for notifications
 
-// ✅ Define Wishlist Item Type
-export type WishlistItem = {
-  id: number;
-  name: string;
-  price: string;
-  imageUrl: string;
-  category: string;
-};
+import React, { createContext, useState, useEffect, useContext, ReactNode } from "react";
 
-// ✅ Define Wishlist Context Type
 interface WishlistContextType {
   wishlist: number[];
   addToWishlist: (id: number) => void;
   removeFromWishlist: (id: number) => void;
-  toggleWishlist: (id: number) => void;
+  toggleWishlist: (id: number) => void;  // ✅ Add toggleWishlist
 }
 
-// ✅ Create Wishlist Context
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
-// ✅ Provider Component
-export const WishlistProvider = ({ children }: { children: React.ReactNode }) => {
-  const [wishlist, setWishlist] = useState<number[]>(() => {
-    if (typeof window !== "undefined") {
-      return JSON.parse(localStorage.getItem("wishlist") || "[]");
-    }
-    return [];
-  });
+interface WishlistProviderProps {
+  children: ReactNode;
+}
 
-  // ✅ Save wishlist to local storage
+export const WishlistProvider: React.FC<WishlistProviderProps> = ({ children }) => {
+  const [wishlist, setWishlist] = useState<number[]>([]);
+
   useEffect(() => {
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
-  }, [wishlist]);
+    if (typeof window !== "undefined") {
+      const storedWishlist = localStorage.getItem("wishlist");
+      if (storedWishlist) {
+        setWishlist(JSON.parse(storedWishlist));
+      }
+    }
+  }, []);
 
-  // ✅ Add to Wishlist with Toast Notification
   const addToWishlist = (id: number) => {
-    if (!wishlist.includes(id)) {
-      setWishlist((prev) => [...prev, id]);
-      toast.success("Added to Wishlist! ✅");
-    } else {
-      toast.info("Already in Wishlist!");
-    }
+    setWishlist((prev) => {
+      const updatedWishlist = prev.includes(id) ? prev : [...prev, id];
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+      }
+
+      return updatedWishlist;
+    });
   };
 
-  // ✅ Remove from Wishlist with Toast Notification
   const removeFromWishlist = (id: number) => {
-    setWishlist((prev) => prev.filter((item) => item !== id));
-    toast.error("Removed from Wishlist ❌");
+    setWishlist((prev) => {
+      const updatedWishlist = prev.filter((item) => item !== id);
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+      }
+
+      return updatedWishlist;
+    });
   };
 
-  // ✅ Toggle Wishlist (Add/Remove)
+  // ✅ Toggle function (add/remove logic combined)
   const toggleWishlist = (id: number) => {
-    if (wishlist.includes(id)) {
-      removeFromWishlist(id);
-    } else {
-      addToWishlist(id);
-    }
+    setWishlist((prev) => {
+      const updatedWishlist = prev.includes(id)
+        ? prev.filter((item) => item !== id)
+        : [...prev, id];
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+      }
+
+      return updatedWishlist;
+    });
   };
 
   return (
-    <WishlistContext.Provider value={{ wishlist, addToWishlist, removeFromWishlist, toggleWishlist }}>
+    <WishlistContext.Provider
+      value={{ wishlist, addToWishlist, removeFromWishlist, toggleWishlist }}
+    >
       {children}
     </WishlistContext.Provider>
   );
 };
 
-// ✅ Custom Hook
-export const useWishlist = () => {
+export const useWishlist = (): WishlistContextType => {
   const context = useContext(WishlistContext);
   if (!context) {
     throw new Error("useWishlist must be used within a WishlistProvider");
