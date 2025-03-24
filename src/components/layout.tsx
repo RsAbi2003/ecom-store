@@ -1,30 +1,34 @@
 "use client"; // This file needs to be a client component
-
 import React from "react";
 import Link from "next/link";
-// import "./styles/globals.css"; // Add global styles for your layout here
 import Navbar from "./Navbar";
+import Footer from '@/components/Footer';  // ✅ Import Footer
 
 // Define the layout structure
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="layout-container">
+    <div className="flex flex-col min-h-screen">   {/* ✅ Use flex layout */}
       {/* Header Section */}
-      
       <Navbar />
+
       {/* Main Content */}
-      <div className="main-content">
+      <div className="flex-grow flex">
         {/* Sidebar */}
-        <aside className="sidebar">
-          <ul>
-           {/* <li><Link href="/products" legacyBehavior>Products</Link></li>*/}
-            {/*<li><Link href="/about" legacyBehavior>About Us</Link></li>*/}
-          </ul>
-        </aside>
+        {/* <aside className="w-1/4 p-4 bg-gray-100">  ✅ Sidebar styling */}
+          {/* <ul> */}
+            {/* <li><Link href="/products">Products</Link></li> */}
+            {/* <li><Link href="/about">About Us</Link></li> */}
+          {/* </ul> */}
+        {/* </aside> */}
 
         {/* Page content goes here */}
-        <main className="content">{children}</main>
+        <main className="flex-grow p-6">
+          {children}
+        </main>
       </div>
+
+      {/* ✅ Footer Section */}
+      <Footer />  
     </div>
   );
 };
